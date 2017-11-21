@@ -1,5 +1,5 @@
-name: Mercatus
-main: com.cubexis.plugin.Mercatus
+name: OminousBounty
+main: com.cubexis.plugin.OminousBounty
 version: 1.0
 depend: [Vault]
 commands:

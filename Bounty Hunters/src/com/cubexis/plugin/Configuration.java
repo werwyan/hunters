@@ -7,12 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
 import org.bukkit.plugin.Plugin;
 
 public class Configuration {
@@ -33,19 +30,9 @@ public class Configuration {
 	private File config;
 	
 	/**
-	 * File containing all messages sent to players
-	 */
-	private File messages;
-	
-	/**
 	 * File containing all data regarding this plugin
 	 */
 	private File data;
-	
-	/**
-	 * File containing all shops
-	 */
-	private File shops;
 	
 	/**
 	 * All files that will be created for this plugin
@@ -58,9 +45,7 @@ public class Configuration {
 	public Configuration(Plugin plugin)
 	{
 		this.plugin = plugin;
-		
-		this.shops  = new File(plugin.getDataFolder(), "shops.yml");
-		this.messages  = new File(plugin.getDataFolder(), "messages.yml");
+
 		this.config  = new File(plugin.getDataFolder(), "config.yml");
 		this.data = new File(plugin.getDataFolder(), "data.yml");
 		
@@ -68,8 +53,6 @@ public class Configuration {
 			plugin.getDataFolder().mkdirs();
 		}
 
-		files.add(shops);
-		files.add(messages);
 		files.add(config);
 		files.add(data);
 
@@ -187,14 +170,6 @@ public class Configuration {
 
 	public void setPlugin(Plugin plugin) {
 		this.plugin = plugin;
-	}
-
-	public File getMessages() {
-		return messages;
-	}
-
-	public void setMessages(File messages) {
-		this.messages = messages;
 	}
 	
 	public YamlConfiguration getYaml() {

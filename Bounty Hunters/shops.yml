@@ -1,6 +1,0 @@
-# All shops created by players will be stored in here
-# Players can also use this file to create a shop instead of using a command
-example:
-   stone:
-      price: 100
-      slot: 3
