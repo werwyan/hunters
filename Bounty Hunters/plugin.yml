@@ -1,0 +1,8 @@
+name: Mercatus
+main: com.cubexis.plugin.Mercatus
+version: 1.0
+depend: [Vault]
+commands:
+  mercatus:
+    description: Plugin overview
+    usage: /mercatus

@@ -1,0 +1,3 @@
+# Amount of time it takes for item prices to update based on ask and demand
+# Specified in minutes, to disable this feature put 0 in
+time: 60
