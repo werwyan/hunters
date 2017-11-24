@@ -1,7 +1,9 @@
 package com.cubexis.event;
 
+import java.util.List;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -14,6 +16,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.metadata.MetadataValue;
+
 import com.cubexis.bounty.Collector;
 import com.cubexis.plugin.OminousBounty;
 
@@ -54,30 +58,35 @@ public class Events implements Listener {
 				if (event.getClickedBlock().getType() == Material.SKULL) {
 					if (event.getClickedBlock().hasMetadata("432.lkjh.4krewqre.wq34.253.v98.xcv7")) {
 						for (Collector collector : OminousBounty.getCollectors()) {
-							//TODO check blocks compare
-							if (event.getClickedBlock().equals(collector.getSkull().getBlock())) {
-								if (event.getPlayer() != collector.getDied()) {
-			
-									String msg = ChatColor.translateAlternateColorCodes('&', String.format(OminousBounty.getBountyHunters().getConfig().getString("collect"), 
-											event.getPlayer().getName(), collector.getBalance()));
-									event.getPlayer().sendMessage(msg);
-									
-									OminousBounty.getEcononomy().depositPlayer((OfflinePlayer) event.getPlayer(), collector.getBalance());
-									
-									collector.cancel();
-									return;
-								} 
-								else {
-									
-									String msg = ChatColor.translateAlternateColorCodes('&', String.format(OminousBounty.getBountyHunters().getConfig().getString("secure"), 
-											event.getPlayer().getName(), collector.getBalance()));
-									
-									event.getPlayer().sendMessage(msg);
-									event.getClickedBlock().setType(Material.AIR);
-									collector.cancel(); return;
-								}
+							List<MetadataValue> meta = event.getClickedBlock().getMetadata("blockID");
+							UUID id = null;
+							
+							for (MetadataValue mv : meta) {
+								id = (UUID) mv.value(); break;
 							}
-
+							
+							if (id != (collector.getId())) continue;
+							
+							
+							if (event.getPlayer() != collector.getDied()) {
+								event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', 
+										String.format(OminousBounty.getBountyHunters().getConfig().getString("collect"), 
+										collector.getDied().getName(), (double) Math.round(collector.getBalance()))));
+								
+								OminousBounty.getEcononomy().depositPlayer(event.getPlayer(), collector.getBalance());
+								OminousBounty.getEcononomy().withdrawPlayer(collector.getDied(), collector.getBalance());
+								
+								collector.cancel();
+								return;
+							} 
+							else {
+								event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', 
+										String.format(OminousBounty.getBountyHunters().getConfig().getString("secure"), 
+										event.getPlayer().getName(), (double) Math.round(collector.getBalance()))));
+								
+								event.getClickedBlock().setType(Material.AIR);
+								collector.cancel(); return;
+							}
 						}
 					}
 				}

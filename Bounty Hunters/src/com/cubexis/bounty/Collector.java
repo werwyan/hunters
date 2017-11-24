@@ -1,5 +1,6 @@
 package com.cubexis.bounty;
 
+import java.util.Random;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -20,6 +21,7 @@ public class Collector implements Runnable {
 	private double balance;
 	private Player died;
 	private UUID id;
+	private Random rand = new Random();
 	
 	public Collector(Skull skull, Player died) {
 		this.start = 0;
