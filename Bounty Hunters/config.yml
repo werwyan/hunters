@@ -1,3 +1,15 @@
-# Amount of time it takes for item prices to update based on ask and demand
-# Specified in minutes, to disable this feature put 0 in
+# Amount of time (in seconds) until a head gets removed
 time: 60
+
+# Message when someone collects bounty by right-clicking on a head
+# %s = name of the player
+# %f for amount of money
+collect: '&aYou collected %s bounty worth %f!'
+
+# Message when someone secures bounty by right-clicking on his/her head
+# %s = name of the player
+# %f for amount of money
+secure: '&aYou secured %s bounty worth %f!'
+
+# Amount of money (in percent) a player will receive when right-clicking on a head
+bounty: 50

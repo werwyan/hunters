@@ -1,6 +1,8 @@
 package com.cubexis.event;
 
-import org.bukkit.Bukkit;
+import java.util.UUID;
+
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -9,16 +11,13 @@ import org.bukkit.block.Skull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
-
+import org.bukkit.event.player.PlayerInteractEvent;
+import com.cubexis.bounty.Collector;
 import com.cubexis.plugin.OminousBounty;
 
-public class Events implements Listener, Runnable {
-	
-	private int task;
-	private int delay = 0;
-	private Location location;
-	private double balance;
+public class Events implements Listener {
 	
 	@EventHandler
 	public void on(PlayerDeathEvent event) {
@@ -26,34 +25,63 @@ public class Events implements Listener, Runnable {
 			if (event.getEntity() instanceof Player) {
 				Player player = (Player) event.getEntity();
 				
-				player.sendMessage("Oh no, you just died");
+				UUID id = player.getUniqueId();
 				
-				// Add skull to variable in main
-				Location loc = player.getLocation();
-				Block sk = loc.getBlock();
-				sk.setType(Material.SKULL);
-				Skull skull = (Skull) sk.getState();
-				skull.setOwningPlayer( (OfflinePlayer) player );
-				skull.update();
+				if (!Collector.collected(id)) {
+					// Add skull to variable in main
+					Location loc = player.getLocation();
+					Block sk = loc.getBlock();
+					sk.setType(Material.SKULL);
+					Skull skull = (Skull) sk.getState();
+					skull.setOwningPlayer( (OfflinePlayer) player );
+					skull.update();
+					
+					Collector collector = new Collector(skull, player);
+					collector.start();
+					OminousBounty.addCollector(collector);
+				}
 				
-				// Set timer runnable to remove skull after amount of time defined in config
-				location = skull.getLocation();
-				task = Bukkit.getScheduler().scheduleSyncRepeatingTask(OminousBounty.getBountyHunters(), this, 20L, 20L);
+				
+				
 			}
 		}
 	}
+	
+	@EventHandler
+	public void b(PlayerInteractEvent event) {
+		if (event.getPlayer() != null) {
+			if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+				if (event.getClickedBlock().getType() == Material.SKULL) {
+					if (event.getClickedBlock().hasMetadata("432.lkjh.4krewqre.wq34.253.v98.xcv7")) {
+						for (Collector collector : OminousBounty.getCollectors()) {
+							//TODO check blocks compare
+							if (event.getClickedBlock().equals(collector.getSkull().getBlock())) {
+								if (event.getPlayer() != collector.getDied()) {
+			
+									String msg = ChatColor.translateAlternateColorCodes('&', String.format(OminousBounty.getBountyHunters().getConfig().getString("collect"), 
+											event.getPlayer().getName(), collector.getBalance()));
+									event.getPlayer().sendMessage(msg);
+									
+									OminousBounty.getEcononomy().depositPlayer((OfflinePlayer) event.getPlayer(), collector.getBalance());
+									
+									collector.cancel();
+									return;
+								} 
+								else {
+									
+									String msg = ChatColor.translateAlternateColorCodes('&', String.format(OminousBounty.getBountyHunters().getConfig().getString("secure"), 
+											event.getPlayer().getName(), collector.getBalance()));
+									
+									event.getPlayer().sendMessage(msg);
+									event.getClickedBlock().setType(Material.AIR);
+									collector.cancel(); return;
+								}
+							}
 
-	@Override
-	public void run() {
-		
-		delay++;
-		
-		Bukkit.getServer().broadcastMessage("x: " + delay + " | task: " + task);
-		
-		if (delay > 10) {
-			location.getBlock().setType(Material.AIR);
-			Bukkit.getScheduler().cancelTask(task);;
+						}
+					}
+				}
+			}
 		}
 	}
-	
 }
