@@ -59,6 +59,14 @@ public class Configuration {
 		createFiles(files, true);
 	}
 
+	public File getData() {
+		return data;
+	}
+
+	public void setData(File data) {
+		this.data = data;
+	}
+
 	/**
 	 * Creates all files from array
 	 * @param files files you want to create

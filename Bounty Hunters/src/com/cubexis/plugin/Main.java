@@ -8,17 +8,19 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.cubexis.bounty.Collector;
+import com.cubexis.commands.Commands;
 import com.cubexis.event.Events;
 
 import net.milkbowl.vault.economy.Economy;
 
 
-public class OminousBounty extends JavaPlugin {
+public class Main extends JavaPlugin {
 	
-	private static OminousBounty instance = null;
+	private static Main instance = null;
 	private static List<Collector> collectors = new ArrayList<>();
     private static final Logger log = Logger.getLogger("Minecraft");
     private static Economy econ = null;
+    private Configuration config;
 	
 	@Override 
 	public void onEnable()
@@ -28,12 +30,12 @@ public class OminousBounty extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
-        
-		//getCommand("destroy").setExecutor(new Commands());
 		
 		instance = this;
-		Configuration config = new Configuration(this);
+		setConfig(new Configuration(this));
 		getServer().getPluginManager().registerEvents(new Events(), this);
+		
+		getCommand("bounty").setExecutor(new Commands());
 	}
 	
 	@Override
@@ -74,7 +76,15 @@ public class OminousBounty extends JavaPlugin {
 	 * Get the main class of the OminousBounty plugin
 	 * @return OminousBounty instance
 	 */
-	public static OminousBounty getBountyHunters() {
+	public static Main getMain() {
 		return instance;
+	}
+
+	public Configuration getAConfig() {
+		return config;
+	}
+
+	public void setConfig(Configuration config) {
+		this.config = config;
 	}
 }

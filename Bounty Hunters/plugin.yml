@@ -1,8 +1,16 @@
 name: OminousBounty
-main: com.cubexis.plugin.OminousBounty
+main: com.cubexis.plugin.Main
 version: 1.0
+author: werwyan
 depend: [Vault]
 commands:
-  mercatus:
+  bounty:
     description: Plugin overview
-    usage: /mercatus
+    usage: /bounty
+permissions:
+    bounty.collect:
+        description: Allows you to collect player bounty
+        default: op
+    bounty.top:
+        description: Display list of top bounty collectors
+        default: op
