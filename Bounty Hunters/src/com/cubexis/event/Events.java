@@ -23,7 +23,7 @@ import com.cubexis.plugin.Main;
 public class Events implements Listener {
 	
 	@EventHandler
-	public void on(PlayerDeathEvent event) {
+	public void on(PlayerDeathEvent event) { 
 		if (event.getEntity() != null) { 
 			if (event.getEntity() instanceof Player) {
 				Player player = (Player) event.getEntity();
