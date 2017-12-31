@@ -38,7 +38,7 @@ public class Events implements Listener {
 					Skull skull = (Skull) sk.getState();
 					skull.setOwningPlayer( (OfflinePlayer) player );
 					skull.update();
-					
+					 
 					Collector collector = new Collector(skull, player);
 					collector.start();
 					Main.addCollector(collector);
