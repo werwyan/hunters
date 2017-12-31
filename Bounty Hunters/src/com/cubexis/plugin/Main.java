@@ -2,6 +2,7 @@ package com.cubexis.plugin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -19,6 +20,7 @@ public class Main extends JavaPlugin {
 	private static Main instance = null;
 	private static List<Collector> collectors = new ArrayList<>();
     private static final Logger log = Logger.getLogger("Minecraft");
+    private static final UUID collectorID = UUID.randomUUID();
     private static Economy econ = null;
     private Configuration config;
 	
@@ -86,5 +88,9 @@ public class Main extends JavaPlugin {
 
 	public void setConfig(Configuration config) {
 		this.config = config;
+	}
+
+	public static UUID getCollectorid() {
+		return collectorID;
 	}
 }

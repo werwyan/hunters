@@ -50,20 +50,28 @@ public class Events implements Listener {
 	@EventHandler
 	public void b(PlayerInteractEvent event) {
 		if (event.getPlayer() != null) {
-			if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+			if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK) {
 				if (event.getClickedBlock().getType() == Material.SKULL) {
-					if (event.getClickedBlock().hasMetadata("432.lkjh.4krewqre.wq34.253.v98.xcv7")) {
+					// If this skull has bounty on it
+					if (event.getClickedBlock().hasMetadata(Main.getCollectorid().toString())) {
+						// If the player is allowed to collect the bounty of this skull
 						if (event.getPlayer().hasPermission("bounty.collect")) {
+							// Loop through all skulls that can be collected
 							for (Collector collector : Main.getCollectors()) {
 								List<MetadataValue> meta = event.getClickedBlock().getMetadata("blockID");
 								UUID id = null;
 								
+								// If this block UUID is equal to the collectors block UUID
 								for (MetadataValue mv : meta) {
 									id = (UUID) mv.value(); break;
 								}
 								
+								
 								if (id != (collector.getId())) continue;
 								
+								event.getPlayer().sendMessage("here");
+								
+								// Prevent player from receiving his own bounty
 								if (event.getPlayer() != collector.getDied()) {
 									event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', 
 											String.format(Main.getMain().getConfig().getString("collect"), 

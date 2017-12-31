@@ -40,16 +40,16 @@ public class Collector implements Runnable {
 		
 		balance = Math.floor(Main.getEcononomy().getBalance((OfflinePlayer) died) * (Main.getMain().getConfig().getDouble("bounty") / 100));
 		
-		FixedMetadataValue meta = new FixedMetadataValue(Main.getMain(), 4320765);
+		FixedMetadataValue meta = new FixedMetadataValue(Main.getMain(), Main.getCollectorid().toString());
 		FixedMetadataValue block = new FixedMetadataValue(Main.getMain(), this.id);
-		skull.setMetadata("432.lkjh.4krewqre.wq34.253.v98.xcv7", meta);
+		skull.setMetadata(Main.getCollectorid().toString(), meta);
 		skull.setMetadata("blockID", block);
 	}
 	
-	public UUID getId() {
-		return id;
-	}
-	
+	/**
+	 * Let this player collect a bounty
+	 * @param p Player to collect a bounty
+	 */
 	public void collect(Player p) {
 		Configuration c = Main.getMain().getAConfig();
 		c.loadFile(c.getData());
@@ -65,6 +65,47 @@ public class Collector implements Runnable {
 		}
 	}
 	
+	/**
+	 * Cancel check for (this) skull collection
+	 */
+	public void cancel() {
+		skull.getBlock().setType(Material.AIR);
+		Main.removeCollector(this);
+		Bukkit.getScheduler().cancelTask(task);
+	}
+	
+	/**
+	 * Start check for (this) skull collection
+	 */
+	public void start() {
+		task = Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.getMain(), this, 20L, 20L);
+	}
+	
+	public static boolean collected(UUID id) {
+		
+		for (Collector c : Main.getCollectors()) {
+			if (c.getDied().getUniqueId() == id) return true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Checks if the skull is collected
+	 */
+	public void run() {
+		start++;
+		
+		if (start > end) {
+			skull.getBlock().setType(Material.AIR);
+			Main.removeCollector(this);
+			Bukkit.getScheduler().cancelTask(task);
+		}
+	}
+	
+	/**
+	 * @return A descending list of players with the amount of bounties they collected
+	 */
 	public static List<Entry<OfflinePlayer, Integer>> count() {
 		Configuration c = Main.getMain().getAConfig();
 		YamlConfiguration yaml = c.getYaml();
@@ -81,6 +122,11 @@ public class Collector implements Runnable {
 		return sort(count);
 	}
 	
+	/**
+	 * Sorts Map in descending order
+	 * @param map Map that should be sorted
+	 * @return Map descending order
+	 */
 	private static <K,V extends Comparable<? super V>> 
 	  List<Entry<K, V>> sort(Map<K,V> map) {
 
@@ -96,38 +142,6 @@ public class Collector implements Runnable {
 		);
 
 		return sortedEntries;
-	}
-
-	public void cancel() {
-		skull.getBlock().setType(Material.AIR);
-		Main.removeCollector(this);
-		Bukkit.getScheduler().cancelTask(task);
-	}
-	
-	public void start() {
-		task = Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.getMain(), this, 20L, 20L);
-	}
-	
-	public static boolean collected(UUID id) {
-		
-		for (Collector c : Main.getCollectors()) {
-			if (c.getDied().getUniqueId() == id) return true;
-		}
-		
-		return false;
-	}
-	
-	public void run() {
-		
-		
-		
-		start++;
-		
-		if (start > end) {
-			skull.getBlock().setType(Material.AIR);
-			Main.removeCollector(this);
-			Bukkit.getScheduler().cancelTask(task);
-		}
 	}
 	
 	public Skull getSkull() {
@@ -157,6 +171,10 @@ public class Collector implements Runnable {
 
 	public void setDied(Player died) {
 		this.died = died;
+	}
+
+	public UUID getId() {
+		return id;
 	}
 
 }
