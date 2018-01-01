@@ -26,7 +26,7 @@ public class Collector implements Runnable {
 	private int task;
 	private int start;
 	private int end;
-	private Skull skull;
+	private Skull skull; 
 	private double balance;
 	private Player died;
 	private UUID id;
