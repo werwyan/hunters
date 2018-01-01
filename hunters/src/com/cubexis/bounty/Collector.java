@@ -24,7 +24,7 @@ import com.cubexis.plugin.Main;
 public class Collector implements Runnable {
 	
 	private int task;
-	private int start;
+	private int start; 
 	private int end;
 	private Skull skull; 
 	private double balance;
