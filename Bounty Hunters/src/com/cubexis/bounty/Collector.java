@@ -34,7 +34,7 @@ public class Collector implements Runnable {
 	public Collector(Skull skull, Player died) {
 		this.start = 0;
 		this.end = Main.getMain().getConfig().getInt("time");
-		this.skull = skull;
+		this.skull = skull; 
 		this.died = died;
 		this.id = UUID.randomUUID();
 		
